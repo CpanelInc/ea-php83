@@ -4,46 +4,104 @@
 # copyright@cpanel.net                                         http://cpanel.net
 # This code is subject to the cPanel license. Unauthorized copying is prohibited
 
-package ea_repo_name_goes_here::find_latest_version;
+package ea_php::find_latest_version;
 
 use strict;
 use warnings;
 
+use HTML::TreeBuilder::XPath ();
+
+use FindBin;
 use lib "../ea-tools/lib/ea4_tool";    # assumes ea-tools is checked out next to this repo
 use ea4_tool::util ();
 
-ea4_tool::util::find_latest_version(\&_get_required, \&_add_sum) if !caller();
+ea4_tool::util::find_latest_version( \&_get_required, \&_add_sum ) if !caller();
 
 ###############
 #### helpers ##
 ###############
 
 sub _get_required {
-   my ($http) = @_;
+    my ($http) = @_;
 
-   my ( $version, $url, $name );
+    my $php_major;
+    if ( $FindBin::Bin =~ m/(\d)(\d)$/ ) {
+        $php_major = "$1.$2";
+    }
+    else {
+        die "Could not determine what verison of PHP I am from “$FindBin::Bin”\n";
+    }
 
-   my $res  = $http->get("https://repo.example.org/releases");
-   # get $version, $url, $name from $res (and possibly multiple HTTP calls)
-   # die if there is a problem determining any of those values
+    my @potential;
+    for my $page ( 1 .. 5 ) {
+        my $res = $http->get("https://api.github.com/repos/php/php-src/tags?page=$page&per_page=100");    # /releases is empty :/ because they don’t prefix w/ a “v” maybe?
+        if ( !$res->{success} ) {
+            die "Could not GET php info from github ($res->{status} $res->{reason})\n\t Throttled? `curl -I https://api.github.com/rate_limit 2>&1 | grep ^X-RateLimit`\n";
 
-   return ( $version, $url, $name );
+        }
+
+        my $tag_list = ea4_tool::util::json2ref( $res->{content} );
+        for my $tag ( @{$tag_list} ) {
+            if ( $tag->{name} =~ m/^php-$php_major\.(\S+)$/ ) {
+                push @potential, $1;
+            }
+        }
+
+        last if @potential;
+    }
+
+    die "Could not determine available $php_major versions\n" if !@potential;
+
+    # factor in 4 4RC1 4RC2 5 5RC1
+    my %groups;
+    for my $v (@potential) {
+        next if $v =~ m/\D/ && !$ENV{EA4TOOL_INCLUDE_PHPRC_VERSIONS};
+
+        if ( $v =~ m/^(\d+)/ ) {
+            my $minor = sprintf( "%05d", $1 );
+            push @{ $groups{$minor} }, $v;
+        }
+    }
+    my ($latest_minor) = map { sort @{ $groups{$_} } } sort { $b cmp $a } keys %groups;
+
+    my $version = "$php_major.$latest_minor";
+    my $name    = "php-$version.tar.bz2";
+    my $url     = "http://www.php.net/distributions/$name";
+
+    return ( $version, $url, $name );
 }
 
 sub _add_sum {
-    my ($http, $hr) = @_;
+    my ( $http, $hr ) = @_;
 
-    # Optional: Set $hr->{tarball}{sum}{hex} and $hr->{tarball}{sum}{type} (sha256, sha1, md5, anythign Digest.pm can handle)
-    #           die if there is a problem determining either of those values
-    # otherwise this is a no-op
+    my $res = $http->get("https://www.php.net/downloads.php");
+    if ( !$res->{success} ) {
+        die "Could not GET php SHA info ($res->{status} $res->{reason})\n";
+    }
+
+    my $sha;
+    my $dom = HTML::TreeBuilder::XPath->new_from_content( $res->{content} );
+  LI:
+    for my $li ( $dom->findnodes("//li") ) {
+        my @links = @{ $li->findnodes("a") };
+        next LI if !@links || $links[0]->attr("href") ne "/distributions/$hr->{tarball}{name}";
+
+      SPAN:
+        for my $span ( $li->findnodes("span") ) {
+            next SPAN if $span->attr("class") ne "sha256";
+            $sha = $span->content();
+            $sha = $sha->[0] if ref($sha) eq 'ARRAY';
+            last LI;
+        }
+    }
+
+    if ($sha) {
+        $hr->{tarball}{sum}{hex}  = $sha;
+        $hr->{tarball}{sum}{type} = "sha256";
+    }
+    else {
+        die "There is no SHA for $hr->{tarball}{name} (not officially released yet?)\n";
+    }
 
     return;
 }
-
-__END__
-
-=encoding utf-8
-
-=head1 README
-
-… explain nuances of fetching the latest-info for this repo here for future us …
