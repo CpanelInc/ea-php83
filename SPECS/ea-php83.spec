@@ -77,7 +77,7 @@ Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
 Version:  8.3.0
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4588 for more details
-%define release_prefix 1
+%define release_prefix 2
 Release:  %{release_prefix}%{?dist}.cpanel
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -88,10 +88,7 @@ URL:      http://www.php.net/
 
 %global litespeed_version 8.1
 
-# only during rc season
-%global uc_version 8.3.0RC1
-
-Source0: php-%{uc_version}.tar.bz2
+Source0: php-%{version}.tar.bz2
 Source1: https://www.litespeedtech.com/packages/lsapi/php-litespeed-%{litespeed_version}.tgz
 Source2: php.ini
 Source3: macros.php
@@ -819,7 +816,7 @@ inside them.
 %prep
 : Building %{name}-%{version}-%{release} with systemd=%{with_systemd} sqlite3=%{with_sqlite3} tidy=%{with_tidy} zip=%{with_zip}
 
-%setup -q -n php-%{uc_version}
+%setup -q -n php-%{version}
 
 %patch42 -p1 -b .systemdpackage
 %patch43 -p1 -b .phpize
@@ -1519,7 +1516,7 @@ fi
 %files zip -f files.zip
 
 %changelog
-* Wed Sep 13 2023 Julian Brown <julian.brown@cpanel.net> - 8.3.0-1
-- ZC-11183: Initial Build
+* Mon Nov 27 2023 Julian Brown <julian.brown@cpanel.net> - 8.3.0-2
+- ZC-11183, ZC-11175: Initial Build
 
 
