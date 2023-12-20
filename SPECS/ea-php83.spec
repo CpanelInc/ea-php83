@@ -45,6 +45,12 @@
 # Regression tests take a long time, you can skip 'em with this
 %{!?runselftest: %{expand: %%global runselftest 0}}
 
+%if 0%{?rhel} >= 8
+%else
+Requires: ea-libcurl
+%global libcurl_prefix /opt/cpanel/libcurl
+%endif
+
 # Use the arch-specific mysql_config binary to avoid mismatch with the
 # arch detection heuristic used by bindir/mysql_config.
 %global mysql_config %{_root_libdir}/mysql/mysql_config
@@ -54,7 +60,11 @@
 
 %global with_sqlite3   1
 
+%if 0%{?rhel} >= 8
 %global with_pcre 1
+%else
+%global with_pcre 0
+%endif
 
 %global isasuffix -%{__isa_bits}
 
@@ -70,14 +80,18 @@ BuildRequires: ea-libzip-devel
 
 %define ea_openssl_ver 1.1.1d-1
 
+%if 0%{?rhel} >= 8
 %define libcurl_ver 7.61.0
+%else
+%define ea_libcurl_ver 7.68.0-2
+%endif
 
 Summary:  PHP scripting language for creating dynamic web sites
 Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
 Version:  8.3.0
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4588 for more details
-%define release_prefix 2
+%define release_prefix 3
 Release:  %{release_prefix}%{?dist}.cpanel
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -127,15 +141,25 @@ BuildRequires: re2c
 BuildRequires: ea-libxml2-devel
 BuildRequires: bzip2-devel, %{db_devel}
 
+%if 0%{?rhel} >= 8
 BuildRequires: libcurl >= %{libcurl_ver}, libcurl-devel >= %{libcurl_ver}
 BuildRequires: brotli brotli-devel
+%else
+BuildRequires: %{ns_name}-libcurl >= %{ea_libcurl_ver}, %{ns_name}-libcurl-devel >= %{ea_libcurl_ver}
+%endif
 
 BuildRequires: pam-devel
 BuildRequires: scl-utils-build
 BuildRequires: libstdc++-devel
 
+%if 0%{?rhel} > 7
+# In C8 we use system openssl. See DESIGN.md in ea-openssl11 git repo for details
 BuildRequires: openssl, openssl-devel
 Requires: openssl
+%else
+BuildRequires: ea-openssl11 >= %{ea_openssl_ver}, ea-openssl11-devel >= %{ea_openssl_ver}
+Requires: ea-openssl11 >= %{ea_openssl_ver}
+%endif
 
 # For Argon2 support
 BuildRequires: ea-libargon2-devel
@@ -347,7 +371,11 @@ Group: Development/Languages
 License: PHP
 Requires: %{?scl_prefix}php-common%{?_isa} = %{version}-%{release}
 Requires: %{?scl_prefix}php-cli%{?_isa} = %{version}-%{release}
+%if 0%{rhel} < 8
+Requires: %{ns_name}-libcurl >= %{ea_libcurl_ver}
+%else
 Requires: libcurl
+%endif
 BuildRequires: libssh2 libssh2-devel libidn libidn-devel ea-libnghttp2-devel
 Provides: %{?scl_prefix}php-curl = %{version}-%{release}, %{?scl_prefix}php-curl%{?_isa} = %{version}-%{release}
 
@@ -454,8 +482,14 @@ Requires: %{?scl_prefix}php-cli%{?_isa} = %{version}-%{release}
 BuildRequires: krb5-devel
 BuildRequires: ea-libc-client
 
+%if 0%{?rhel} > 7
+# In C8 we use system openssl. See DESIGN.md in ea-openssl11 git repo for details
 BuildRequires: openssl, openssl-devel
 Requires: openssl
+%else
+BuildRequires: ea-openssl11 >= %{ea_openssl_ver}, ea-openssl11-devel >= %{ea_openssl_ver}
+Requires: ea-openssl11 >= %{ea_openssl_ver}
+%endif
 
 %description imap
 The %{?scl_prefix}php-imap module will add IMAP (Internet Message Access Protocol)
@@ -472,8 +506,14 @@ Requires: %{?scl_prefix}php-cli%{?_isa} = %{version}-%{release}
 
 BuildRequires: cyrus-sasl-devel, openldap-devel
 
+%if 0%{?rhel} > 7
+# In C8 we use system openssl. See DESIGN.md in ea-openssl11 git repo for details
 BuildRequires: openssl, openssl-devel
 Requires: openssl
+%else
+BuildRequires: ea-openssl11 >= %{ea_openssl_ver}, ea-openssl11-devel >= %{ea_openssl_ver}
+Requires: ea-openssl11 >= %{ea_openssl_ver}
+%endif
 
 %description ldap
 The %{?scl_prefix}php-ldap package adds Lightweight Directory Access Protocol (LDAP)
@@ -546,8 +586,14 @@ Provides: %{?scl_prefix}php-pdo_pgsql = %{version}-%{release}, %{?scl_prefix}php
 
 BuildRequires: krb5-devel, postgresql-devel
 
+%if 0%{?rhel} > 7
+# In C8 we use system openssl. See DESIGN.md in ea-openssl11 git repo for details
 BuildRequires: openssl, openssl-devel
 Requires: openssl
+%else
+BuildRequires: ea-openssl11 >= %{ea_openssl_ver}, ea-openssl11-devel >= %{ea_openssl_ver}
+Requires: ea-openssl11 >= %{ea_openssl_ver}
+%endif
 
 %description pgsql
 The %{?scl_prefix}php-pgsql package add PostgreSQL database support to PHP.
@@ -791,8 +837,12 @@ License: PHP
 Group: System Environment/Libraries
 Requires: %{?scl_prefix}php-common%{?_isa} = %{version}-%{release}
 Requires: %{?scl_prefix}php-cli%{?_isa} = %{version}-%{release}
+%if 0%{?rhel} >= 8
 BuildRequires: enchant2-devel
 Requires: enchant2
+%else
+BuildRequires: enchant-devel >= 1.2.4
+%endif
 
 %description enchant
 The %{?scl_prefix}php-enchant package contains a dynamic shared object that will add
@@ -958,7 +1008,10 @@ touch configure.in
 
 ./buildconf --force
 
+C8FLAGS=""
+%if 0%{?rhel} > 7
 C8FLAGS="-mshstk"
+%endif
 
 CFLAGS="$RPM_OPT_FLAGS -fno-strict-aliasing -Wno-pointer-sign $C8FLAGS"
 export CFLAGS
@@ -969,7 +1022,12 @@ XFLAGS=`echo "$XFLAGS" | sed 's/-ffat-lto-objects//g'`
 export CFLAGS="$XFLAGS"
 %endif
 
+%if 0%{?rhel} > 7
 export CURL_SHARED_LIBADD="-Wl,-rpath=/opt/cpanel/ea-brotli/%{_lib}"
+%else
+export SNMP_SHARED_LIBADD="-Wl,-rpath=/opt/cpanel/ea-openssl11/%{_lib}"
+export CURL_SHARED_LIBADD="-Wl,-rpath=/opt/cpanel/ea-openssl11/%{_lib} -Wl,-rpath=/opt/cpanel/ea-brotli/%{_lib}"
+%endif
 
 # Install extension modules in %{_libdir}/php/modules.
 EXTENSION_DIR=%{_libdir}/php/modules; export EXTENSION_DIR
@@ -978,7 +1036,9 @@ EXTENSION_DIR=%{_libdir}/php/modules; export EXTENSION_DIR
 # includes the PEAR directory even though pear is packaged
 # separately.
 PEAR_INSTALLDIR=%{_datadir}/pear; export PEAR_INSTALLDIR
+%if 0%{?rhel} >= 8
 export XLDFLAGS=$LDFLAGS
+%endif
 
 # Shell function to configure and build a PHP tree.
 build() {
@@ -997,12 +1057,20 @@ cp ../Zend/zend_{language,ini}_{parser,scanner}.* Zend
 # openssl: for PHAR_SIG_OPENSSL
 # zlib: used by image
 
+%if 0%{?rhel} > 7
 export PKG_CONFIG_PATH=/opt/cpanel/ea-php83/root/usr/%{_lib}/pkgconfig:/opt/cpanel/ea-php83/root/usr/share/pkgconfig:/usr/%{_lib}/pkgconfig:/opt/cpanel/ea-libxml2/%{_lib}/pkgconfig:/opt/cpanel/ea-libicu/lib/pkgconfig:/opt/cpanel/ea-oniguruma/%{_lib}/pkgconfig:/opt/cpanel/libargon2/lib64/pkgconfig:/usr/lib64/pkgconfig:/usr/lib64/pkgconfig:/opt/cpanel/libargon2/lib64/pkgconfig
+%else
+export PKG_CONFIG_PATH=/opt/cpanel/ea-php83/root/usr/%{_lib}/pkgconfig:/opt/cpanel/ea-php83/root/usr/share/pkgconfig:/usr/%{_lib}/pkgconfig:/opt/cpanel/ea-openssl11/lib/pkgconfig:/opt/cpanel/ea-libxml2/%{_lib}/pkgconfig:/opt/cpanel/ea-libicu/lib/pkgconfig:/opt/cpanel/ea-oniguruma/%{_lib}/pkgconfig:/opt/cpanel/libargon2/lib64/pkgconfig:/usr/lib64/pkgconfig:/usr/lib64/pkgconfig:/opt/cpanel/libargon2/lib64/pkgconfig
+%endif
 
 export LIBXML_CFLAGS=-I/opt/cpanel/ea-libxml2/include/libxml2
 export LIBXML_LIBS="-L/opt/cpanel/ea-libxml2/%{_lib} -lxml2"
 export XSL_CFLAGS=-I/opt/cpanel/ea-libxml2/include/libxml2
 export XSL_LIBS="-L/opt/cpanel/ea-libxml2/%{_lib} -lxml2"
+%if 0%{?rhel} < 8
+export CURL_CFLAGS=-I/opt/cpanel/libcurl/include
+export CURL_LIBS="-L/opt/cpanel/libcurl/%{_lib} -lcurl"
+%endif
 export JPEG_CFLAGS=-I/usr/include
 export JPEG_LIBS="-L/usr/%{_lib} -ljpeg"
 export KERBEROS_CFLAGS=-I/usr/include
@@ -1010,12 +1078,21 @@ export KERBEROS_LIBS=-L/usr/%{_lib}
 export SASL_CFLAGS=-I/usr/include
 export SASL_LIBS=-L/usr/%{_lib}
 
+%if 0%{?rhel} < 8
+export OPENSSL_CFLAGS=-I/opt/cpanel/ea-openssl11/include
+export OPENSSL_LIBS="-L/opt/cpanel/ea-openssl11/lib -lssl -lcrypto -lresolv"
+%endif
+
 export SYSTEMD_LIBS=-lsystemd
 
 export LIBZIP_CFLAGS=-I/opt/cpanel/ea-libzip/include
 export LIBZIP_LIBS="-L/opt/cpanel/ea-libzip/lib64 -lzip"
 
+%if 0%{?rhel} >= 8
 export LDFLAGS="$XLDFLAGS -Wl,-rpath,/opt/cpanel/ea-libzip/lib64 -Wl,-rpath-link,/lib64 -Wl,-rpath,/lib64"
+%else
+export LDFLAGS="-Wl,-rpath=/opt/cpanel/ea-brotli/lib"
+%endif
 
 export LDFLAGS="$LDFLAGS -Wl,-rpath,/opt/cpanel/libargon2/lib64 -L/opt/cpanel/libargon2/lib64 -largon2"
 export ARGON2_CFLAGS=-I/opt/cpanel/libargon2/include
@@ -1037,7 +1114,7 @@ ln -sf ../configure
     --with-gettext \
     --with-iconv \
     --with-jpeg \
-    --with-openssl \
+    --with-openssl=/opt/cpanel/ea-openssl11/lib \
 %if %{with_pcre}
     --with-pcre-regex=%{_root_prefix} \
 %endif
@@ -1112,7 +1189,11 @@ build --libdir=%{_libdir}/php \
       --enable-soap=shared \
       --with-xsl=shared,%{_root_prefix} \
       --enable-xmlreader=shared --enable-xmlwriter=shared \
+%if 0%{?rhel} >= 8
       --with-curl=shared \
+%else
+      --with-curl=shared,%{libcurl_prefix} \
+%endif      
       --enable-pdo=shared \
       --with-pdo-odbc=shared,unixODBC,%{_root_prefix} \
       --with-pdo-mysql=shared,mysqlnd \
@@ -1516,6 +1597,9 @@ fi
 %files zip -f files.zip
 
 %changelog
+* Thu Dec 14 2023 Julian Brown <julian.brown@cpanel.net> - 8.3.0-3
+- ZC-11475: Build on CentOS 7
+
 * Mon Nov 27 2023 Julian Brown <julian.brown@cpanel.net> - 8.3.0-2
 - ZC-11183, ZC-11175: Initial Build
 
