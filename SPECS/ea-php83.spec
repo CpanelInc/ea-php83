@@ -91,7 +91,7 @@ Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
 Version:  8.3.0
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4588 for more details
-%define release_prefix 3
+%define release_prefix 4
 Release:  %{release_prefix}%{?dist}.cpanel
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -1597,6 +1597,9 @@ fi
 %files zip -f files.zip
 
 %changelog
+* Mon Dec 18 2023 Travis Holloway <t.holloway@cpanel.net> - 8.3.0-4
+- EA-10753: Have snmp module require 'snmp-mibs-downloader' for deb
+
 * Thu Dec 14 2023 Julian Brown <julian.brown@cpanel.net> - 8.3.0-3
 - ZC-11475: Build on CentOS 7
 
