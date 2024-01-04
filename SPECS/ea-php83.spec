@@ -89,9 +89,9 @@ BuildRequires: ea-libzip-devel
 Summary:  PHP scripting language for creating dynamic web sites
 Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
-Version:  8.3.0
+Version:  8.3.1
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4588 for more details
-%define release_prefix 4
+%define release_prefix 1
 Release:  %{release_prefix}%{?dist}.cpanel
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -1597,6 +1597,9 @@ fi
 %files zip -f files.zip
 
 %changelog
+* Thu Jan 04 2024 Cory McIntire <cory@cpanel.net> - 8.3.1-1
+- EA-11894: Update ea-php83 from v8.3.0 to v8.3.1
+
 * Mon Dec 18 2023 Travis Holloway <t.holloway@cpanel.net> - 8.3.0-4
 - EA-10753: Have snmp module require 'snmp-mibs-downloader' for deb
 
