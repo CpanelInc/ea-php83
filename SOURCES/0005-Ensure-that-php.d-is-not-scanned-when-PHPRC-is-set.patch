@@ -8,10 +8,10 @@ Subject: [PATCH 05/12] Ensure that php.d is not scanned when PHPRC is set
  1 file changed, 9 insertions(+), 1 deletion(-)
 
 diff --git a/main/php_ini.c b/main/php_ini.c
-index 2ff259f..9605019 100644
+index 82420fd..1a28bab 100644
 --- a/main/php_ini.c
 +++ b/main/php_ini.c
-@@ -639,7 +639,15 @@ int php_init_config(void)
+@@ -629,7 +629,15 @@ int php_init_config(void)
  	php_ini_scanned_path_len = (int)strlen(php_ini_scanned_path);
  
  	/* Scan and parse any .ini files found in scan path if path not empty. */
