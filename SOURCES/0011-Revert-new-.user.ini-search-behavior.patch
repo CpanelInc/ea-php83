@@ -9,7 +9,7 @@ Subject: [PATCH 11/12] Revert new .user.ini search behavior
  2 files changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/sapi/cgi/cgi_main.c b/sapi/cgi/cgi_main.c
-index b454680..a4432f8 100644
+index 156599f..911bc46 100644
 --- a/sapi/cgi/cgi_main.c
 +++ b/sapi/cgi/cgi_main.c
 @@ -778,7 +778,7 @@ static void sapi_cgi_log_message(const char *message, int syslog_type_int)

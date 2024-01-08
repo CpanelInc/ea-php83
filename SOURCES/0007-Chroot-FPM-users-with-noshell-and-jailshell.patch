@@ -1,7 +1,7 @@
-From c12daf7159997957f874e0a531632b504795ec00 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Julian Brown <julian.brown@cpanel.net>
 Date: Wed, 13 Sep 2023 12:07:48 -0500
-Subject: [PATCH] Chroot FPM users with noshell and jailshell
+Subject: [PATCH 07/12] Chroot FPM users with noshell and jailshell
 
 ---
  sapi/fpm/fpm/fpm_conf.c | 3009 ++++++++++++++++++++-------------------
@@ -9,7 +9,7 @@ Subject: [PATCH] Chroot FPM users with noshell and jailshell
  2 files changed, 1574 insertions(+), 1504 deletions(-)
 
 diff --git a/sapi/fpm/fpm/fpm_conf.c b/sapi/fpm/fpm/fpm_conf.c
-index 4823c039..5c47dc21 100644
+index 4823c03..5c47dc2 100644
 --- a/sapi/fpm/fpm/fpm_conf.c
 +++ b/sapi/fpm/fpm/fpm_conf.c
 @@ -1,4 +1,4 @@
@@ -3350,7 +3350,7 @@ index 4823c039..5c47dc21 100644
  }
  /* }}} */
 diff --git a/sapi/fpm/fpm/fpm_unix.c b/sapi/fpm/fpm/fpm_unix.c
-index 6ac0b004..c7adffd4 100644
+index 6ac0b00..c7adffd 100644
 --- a/sapi/fpm/fpm/fpm_unix.c
 +++ b/sapi/fpm/fpm/fpm_unix.c
 @@ -11,6 +11,7 @@
@@ -3436,6 +3436,3 @@ index 6ac0b004..c7adffd4 100644
  	if (is_root && wp->config->chroot && *wp->config->chroot) {
  		if (0 > chroot(wp->config->chroot)) {
  			zlog(ZLOG_SYSERROR, "[pool %s] failed to chroot(%s)",  wp->config->name, wp->config->chroot);
--- 
-2.40.1
-
