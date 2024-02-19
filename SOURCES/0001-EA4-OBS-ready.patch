@@ -9,7 +9,7 @@ Subject: [PATCH 01/12] EA4 OBS ready
  2 files changed, 4 deletions(-)
 
 diff --git a/build/php.m4 b/build/php.m4
-index 53ba394..ca6f0c1 100644
+index 25d820c..5dbaa70 100644
 --- a/build/php.m4
 +++ b/build/php.m4
 @@ -2035,8 +2035,6 @@ dnl
@@ -22,7 +22,7 @@ index 53ba394..ca6f0c1 100644
    PHP_EVAL_LIBLINE($LIBXML_LIBS, $1)
  
 diff --git a/sapi/fpm/config.m4 b/sapi/fpm/config.m4
-index 77dc32c..3bad656 100644
+index 729fb71..748eca1 100644
 --- a/sapi/fpm/config.m4
 +++ b/sapi/fpm/config.m4
 @@ -557,8 +557,6 @@ if test "$PHP_FPM" != "no"; then
