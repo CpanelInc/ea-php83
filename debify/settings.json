@@ -56,8 +56,7 @@
         "ea-php83-php-pgsql": [ "libpq5" ],
         "ea-php83-php-pspell": [ "libaspell15" ],
         "ea-php83-php-snmp": [ "snmp-mibs-downloader" ],
-        "ea-php83-php-sodium": [ "ea-php83-php-common", "libsodium23" ],
-        "ea-php81-php-gd": [ "libavif-bin" ]
+        "ea-php83-php-sodium": [ "ea-php83-php-common", "libsodium23" ]
     },
     "remove_from_install": [
         "libphp7.so",
