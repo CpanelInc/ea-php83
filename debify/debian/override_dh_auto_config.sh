@@ -135,12 +135,13 @@ pushd build
 
 ln -s ../configure
 
-export AVIFFLAG=""
-if [[ $(echo $VERSION_ID | cut -d. -f1) -lt "22" ]]; then
-    export AVIFFLAG="--without-avif" 
-else
-    export AVIFFLAG="--with-avif"
-fi
+# change back to empty string and uncomment with Ubuntu avif support (ZC-11727)
+export AVIFFLAG="--without-avif"
+# if [[ $(echo $VERSION_ID | cut -d. -f1) -lt "22" ]]; then
+#     export AVIFFLAG="--without-avif" 
+# else
+#     export AVIFFLAG="--with-avif"
+# fi
 
 ./configure \
     --disable-gcc-global-regs \
