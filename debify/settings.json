@@ -14,9 +14,7 @@
         "brotli-devel",
         "scl-utils-build",
         "pkgconfig(libsodium)",
-        "libsodium",
-        "libavif",
-        "libavif-devel"
+        "libsodium"
     ],
     "remove_from_provides": [
         "Provides:"
