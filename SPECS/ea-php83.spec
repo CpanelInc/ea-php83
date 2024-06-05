@@ -143,6 +143,10 @@ Patch402: 0010-0022-PLESK-missed-kill.patch
 Patch403: 0011-Revert-new-.user.ini-search-behavior.patch
 Patch404: 0012-Prevent-kill_all_lockers-from-crashing-PHP.patch
 
+%if 0%{?rhel} == 7
+BuildRequires: devtoolset-8 devtoolset-8-gcc devtoolset-8-gcc-c++ kernel-devel
+%endif
+
 BuildRequires: re2c
 BuildRequires: ea-libxml2-devel
 BuildRequires: bzip2-devel, %{db_devel}
@@ -1005,6 +1009,9 @@ sed -e 's:%{_root_sysconfdir}:%{_sysconfdir}:' \
 
 
 %build
+%if 0%{?rhel} == 7
+. /opt/rh/devtoolset-8/enable
+%endif
 
 # aclocal workaround - to be improved
 cat `aclocal --print-ac-dir`/{libtool,ltoptions,ltsugar,ltversion,lt~obsolete}.m4 >>aclocal.m4
