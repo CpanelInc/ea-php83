@@ -95,9 +95,9 @@ BuildRequires: ea-libzip-devel
 Summary:  PHP scripting language for creating dynamic web sites
 Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
-Version:  8.3.6
+Version:  8.3.7
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4588 for more details
-%define release_prefix 2
+%define release_prefix 1
 Release:  %{release_prefix}%{?dist}.cpanel
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -142,6 +142,10 @@ Patch107: 0009-Add-support-for-use-of-the-system-timezone-database.patch
 Patch402: 0010-0022-PLESK-missed-kill.patch
 Patch403: 0011-Revert-new-.user.ini-search-behavior.patch
 Patch404: 0012-Prevent-kill_all_lockers-from-crashing-PHP.patch
+
+%if 0%{?rhel} == 7
+BuildRequires: devtoolset-8 devtoolset-8-gcc devtoolset-8-gcc-c++ kernel-devel
+%endif
 
 BuildRequires: re2c
 BuildRequires: ea-libxml2-devel
@@ -1005,6 +1009,9 @@ sed -e 's:%{_root_sysconfdir}:%{_sysconfdir}:' \
 
 
 %build
+%if 0%{?rhel} == 7
+. /opt/rh/devtoolset-8/enable
+%endif
 
 # aclocal workaround - to be improved
 cat `aclocal --print-ac-dir`/{libtool,ltoptions,ltsugar,ltversion,lt~obsolete}.m4 >>aclocal.m4
@@ -1610,6 +1617,9 @@ fi
 %files zip -f files.zip
 
 %changelog
+* Tue Jun 04 2024 Dan Muey <dan@cpanel.net> - 8.3.7-1
+- EA-12145: Update ea-php83 from v8.3.6 to v8.3.7
+
 * Thu Apr 11 2024 Brian Mendoza <brian.mendoza@cpanel.net> - 8.3.6-2
 - ZC-11730: Add GD support for AVIF format on Ubuntu 22 and higher 
 

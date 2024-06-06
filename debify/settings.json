@@ -11,6 +11,10 @@
         "_httpd_moddir": "/usr/lib64/apache2/modules"
     },
     "remove_from_requires": [
+        "devtoolset-8",
+        "devtoolset-8-gcc",
+        "devtoolset-8-gcc-c++",
+        "kernel-devel",
         "brotli-devel",
         "scl-utils-build",
         "pkgconfig(libsodium)",
