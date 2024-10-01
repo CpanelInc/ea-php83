@@ -39,7 +39,7 @@ r1: initial revision
  2 files changed, 549 insertions(+), 7 deletions(-)
 
 diff --git a/ext/date/config0.m4 b/ext/date/config0.m4
-index 6b803bf..11b54c0 100644
+index d7ec926..bf6ae97 100644
 --- a/ext/date/config0.m4
 +++ b/ext/date/config0.m4
 @@ -4,6 +4,17 @@ AC_CHECK_HEADERS([io.h])
@@ -61,7 +61,7 @@ index 6b803bf..11b54c0 100644
    [PHP_DATE_CFLAGS="$PHP_DATE_CFLAGS -Wno-implicit-fallthrough"],,
    [-Werror])
 diff --git a/ext/date/lib/parse_tz.c b/ext/date/lib/parse_tz.c
-index c7f9358..4cc0f21 100644
+index c7f9358..c64f16c 100644
 --- a/ext/date/lib/parse_tz.c
 +++ b/ext/date/lib/parse_tz.c
 @@ -26,9 +26,22 @@
