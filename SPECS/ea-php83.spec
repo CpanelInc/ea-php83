@@ -1303,7 +1303,7 @@ install -m 755 -d $RPM_BUILD_ROOT%{_datadir}/php
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/php.d
 install -m 755 -d $RPM_BUILD_ROOT%{_localstatedir}/lib
 
-install -m 755 build-cgi/sapi/litespeed/php $RPM_BUILD_ROOT%{_bindir}/lsphp
+install -m 755 build-cgi/sapi/litespeed/lsphp $RPM_BUILD_ROOT%{_bindir}/lsphp
 
 # PHP-FPM stuff
 # Log
