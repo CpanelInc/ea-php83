@@ -97,7 +97,7 @@ Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
 Version:  8.3.23
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4588 for more details
-%define release_prefix 1
+%define release_prefix 2
 Release:  %{release_prefix}%{?dist}.cpanel
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -1633,6 +1633,9 @@ fi
 %files zip -f files.zip
 
 %changelog
+* Wed Sep 10 2025 Dan Muey <daniel.muey@webpros.com> - 8.3.23-2
+- EA4-122: map u24 libodbc for PHP extension
+
 * Thu Jul 03 2025 Cory McIntire <cory.mcintire@webpros.com> - 8.3.23-1
 - EA-13000: Update ea-php83 from v8.3.22 to v8.3.23
 - Fixed GHSA-hrwm-9436-5mv3 (pgsql extension does not check for errors during escaping). (CVE-2025-1735)

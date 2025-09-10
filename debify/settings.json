@@ -55,7 +55,7 @@
     "add_to_requires": {
         "ea-php83-php-imap": [ "libc-client2007e" ],
         "ea-php83-php-dba": [ "libtokyocabinet9" ],
-        "ea-php83-php-odbc": [ "libodbc1" ],
+        "ea-php83-php-odbc": [ [ "libodbc1", "libodbc2" ] ],
         "ea-php83-php-pdo": [ "libpq5" ],
         "ea-php83-php-pgsql": [ "libpq5" ],
         "ea-php83-php-pspell": [ "libaspell15" ],
