@@ -111,7 +111,7 @@ Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
 Version:  8.3.30
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4588 for more details
-%define release_prefix 2
+%define release_prefix 3
 Release:  %{release_prefix}%{?dist}.cpanel
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -1664,6 +1664,9 @@ fi
 %files zip -f files.zip
 
 %changelog
+* Fri Apr 24 2026 Heekyoung Park <heekyoung.park@webpros.com> - 8.3.30-3
+- EA4-260: Build for Ubuntu 26.04
+
 * Thu Jan 22 2026 Gary Stanley <gary.stanley@webpros.com> - 8.3.30-2
 - EA4-230: Use system libxml2 in PHP 8.3
 * Wed Jan 21 2026 Cory McIntire <cory.mcintire@webpros.com> - 8.3.30-1
