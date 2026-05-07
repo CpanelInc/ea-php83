@@ -8,7 +8,7 @@ Subject: [PATCH 05/12] Ensure that php.d is not scanned when PHPRC is set
  1 file changed, 9 insertions(+), 1 deletion(-)
 
 diff --git a/main/php_ini.c b/main/php_ini.c
-index 82420fd..1a28bab 100644
+index 925438c..0862054 100644
 --- a/main/php_ini.c
 +++ b/main/php_ini.c
 @@ -629,7 +629,15 @@ int php_init_config(void)
