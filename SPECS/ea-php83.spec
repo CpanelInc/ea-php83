@@ -1666,6 +1666,14 @@ fi
 %changelog
 * Thu May 07 2026 Cory McIntire <cory.mcintire@webpros.com> - 8.3.31-1
 - EA-13428: Update ea-php83 from v8.3.30 to v8.3.31
+- Fixed GHSA-7qg2-v9fj-4mwv (XSS within FPM status endpoint). (CVE-2026-6735)
+- Fixed GHSA-wm6j-2649-pv75 (Null pointer dereference in mb_ereg_search_init()). (CVE-2026-7259)
+- Fixed GHSA-w476-322c-wpvm (SQL injection via NUL bytes in PDO_Firebird). (CVE-2025-14179)
+- Fixed GHSA-85c2-q967-79q5 (Stale SOAP_GLOBAL ref_map pointer). (CVE-2026-6722)
+- Fixed GHSA-m33r-qmcv-p97q (Use-after-free in SOAP persistence session). (CVE-2026-7261)
+- Fixed GHSA-hmxp-6pc4-f3vv (Broken Apache map value NULL check in SOAP). (CVE-2026-7262)
+- Fixed GHSA-96wq-48vp-hh57 (Signed integer overflow of char array offset). (CVE-2026-7568)
+- Fixed GHSA-m8rr-4c36-8gq4 (Unsigned char handling in ctype.h functions). (CVE-2026-7258)
 
 * Thu Jan 22 2026 Gary Stanley <gary.stanley@webpros.com> - 8.3.30-2
 - EA4-230: Use system libxml2 in PHP 8.3
