@@ -44,7 +44,6 @@
         "libpspell-dev",
         "libsnmp-dev",
         "libtidy-dev",
-        "libtidy5deb1",
         "libc-client2007e-dev",
         "unixodbc-dev",
         "libbrotli-dev",
@@ -53,6 +52,7 @@
         "libsodium23"
     ],
     "add_to_requires": {
+        "ea-php83-php-xml": [ ["libxml2-16", "libxml2t64", "libxml2"] ],
         "ea-php83-php-imap": [ "libc-client2007e" ],
         "ea-php83-php-dba": [ "libtokyocabinet9" ],
         "ea-php83-php-odbc": [ [ "libodbc1", "libodbc2" ] ],
