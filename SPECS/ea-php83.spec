@@ -109,9 +109,9 @@ BuildRequires: ea-libzip-devel
 Summary:  PHP scripting language for creating dynamic web sites
 Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
-Version:  8.3.30
+Version:  8.3.31
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4588 for more details
-%define release_prefix 3
+%define release_prefix 2
 Release:  %{release_prefix}%{?dist}.cpanel
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -1664,8 +1664,19 @@ fi
 %files zip -f files.zip
 
 %changelog
-* Fri Apr 24 2026 Heekyoung Park <heekyoung.park@webpros.com> - 8.3.30-3
+* Fri Apr 24 2026 Heekyoung Park <heekyoung.park@webpros.com> - 8.3.31-2
 - EA4-260: Build for Ubuntu 26.04
+
+* Thu May 07 2026 Cory McIntire <cory.mcintire@webpros.com> - 8.3.31-1
+- EA-13428: Update ea-php83 from v8.3.30 to v8.3.31
+- Fixed GHSA-7qg2-v9fj-4mwv (XSS within FPM status endpoint). (CVE-2026-6735)
+- Fixed GHSA-wm6j-2649-pv75 (Null pointer dereference in mb_ereg_search_init()). (CVE-2026-7259)
+- Fixed GHSA-w476-322c-wpvm (SQL injection via NUL bytes in PDO_Firebird). (CVE-2025-14179)
+- Fixed GHSA-85c2-q967-79q5 (Stale SOAP_GLOBAL ref_map pointer). (CVE-2026-6722)
+- Fixed GHSA-m33r-qmcv-p97q (Use-after-free in SOAP persistence session). (CVE-2026-7261)
+- Fixed GHSA-hmxp-6pc4-f3vv (Broken Apache map value NULL check in SOAP). (CVE-2026-7262)
+- Fixed GHSA-96wq-48vp-hh57 (Signed integer overflow of char array offset). (CVE-2026-7568)
+- Fixed GHSA-m8rr-4c36-8gq4 (Unsigned char handling in ctype.h functions). (CVE-2026-7258)
 
 * Thu Jan 22 2026 Gary Stanley <gary.stanley@webpros.com> - 8.3.30-2
 - EA4-230: Use system libxml2 in PHP 8.3
@@ -1805,5 +1816,4 @@ fi
 
 * Mon Nov 27 2023 Julian Brown <julian.brown@cpanel.net> - 8.3.0-2
 - ZC-11183, ZC-11175: Initial Build
-
 
