@@ -111,7 +111,7 @@ Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
 Version:  8.3.31
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4588 for more details
-%define release_prefix 1
+%define release_prefix 2
 Release:  %{release_prefix}%{?dist}.cpanel
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -1664,6 +1664,9 @@ fi
 %files zip -f files.zip
 
 %changelog
+* Fri May 07 2026 Heekyoung Park <heekyoung.park@webpros.com> - 8.3.31-2
+- EA4-260: Build for Ubuntu 26.04
+
 * Thu May 07 2026 Cory McIntire <cory.mcintire@webpros.com> - 8.3.31-1
 - EA-13428: Update ea-php83 from v8.3.30 to v8.3.31
 - Fixed GHSA-7qg2-v9fj-4mwv (XSS within FPM status endpoint). (CVE-2026-6735)
@@ -1813,5 +1816,4 @@ fi
 
 * Mon Nov 27 2023 Julian Brown <julian.brown@cpanel.net> - 8.3.0-2
 - ZC-11183, ZC-11175: Initial Build
-
 
