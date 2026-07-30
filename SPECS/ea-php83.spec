@@ -1666,6 +1666,9 @@ fi
 %changelog
 * Thu Jul 30 2026 Cory McIntire <cory.mcintire@webpros.com> - 8.3.33-1
 - EA-13521: Update ea-php83 from v8.3.32 to v8.3.33
+- Fixed libgd vulnerability. (CVE-2026-9672; severity not yet assigned)
+- Fixed SQL injection via E'...' backslash breakout. (CVE-2026-17543; High, CVSS 4.0 8.1)
+- Fixed crash via recursive symlinks in Phar archives. (CVE-2026-7260; Medium, CVSS 4.0 5.4)
 
 * Sat Jul 04 2026 EA4 Update Bot <cory.mcintire@webpros.com> - 8.3.32-1
 - EA-13483: Update ea-php83 from v8.3.31 to v8.3.32
@@ -1824,4 +1827,3 @@ fi
 
 * Mon Nov 27 2023 Julian Brown <julian.brown@cpanel.net> - 8.3.0-2
 - ZC-11183, ZC-11175: Initial Build
-
