@@ -109,7 +109,7 @@ BuildRequires: ea-libzip-devel
 Summary:  PHP scripting language for creating dynamic web sites
 Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
-Version:  8.3.32
+Version:  8.3.33
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4588 for more details
 %define release_prefix 1
 Release:  %{release_prefix}%{?dist}.cpanel
@@ -1664,6 +1664,9 @@ fi
 %files zip -f files.zip
 
 %changelog
+* Thu Jul 30 2026 Cory McIntire <cory.mcintire@webpros.com> - 8.3.33-1
+- EA-13521: Update ea-php83 from v8.3.32 to v8.3.33
+
 * Sat Jul 04 2026 EA4 Update Bot <cory.mcintire@webpros.com> - 8.3.32-1
 - EA-13483: Update ea-php83 from v8.3.31 to v8.3.32
 - Fixed bug GH-21468 (TLS setup failure leading to remote DoS). (CVE-2026-12184)
