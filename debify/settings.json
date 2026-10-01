@@ -19,6 +19,7 @@
         "scl-utils-build",
         "pkgconfig(libsodium)",
         "libavif",
+        "libavif-bin",
         "libavif-dev",
         "libsodium"
     ],
