@@ -111,7 +111,7 @@ Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
 Version:  8.3.37
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4588 for more details
-%define release_prefix 1
+%define release_prefix 2
 Release:  %{release_prefix}%{?dist}.cpanel
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -120,7 +120,7 @@ License:  PHP and Zend and BSD
 Group:    Development/Languages
 URL:      http://www.php.net/
 
-%global litespeed_version 8.3
+%global litespeed_version 8.4
 
 Source0: php-%{version}.tar.bz2
 Source1: https://www.litespeedtech.com/packages/lsapi/php-litespeed-%{litespeed_version}.tgz
@@ -1675,6 +1675,9 @@ fi
 %files zip -f files.zip
 
 %changelog
+* Fri Nov 20 2026 Cory McIntire <cory.mcintire@webpros.com> - 8.3.37-2
+- EA-13654: Update php-litespeed to 8.4
+
 * Mon Nov 16 2026 Cory McIntire <cory.mcintire@webpros.com> - 8.3.37-1
 - EA-13660: Update ea-php83 from v8.3.36 to v8.3.37
 
