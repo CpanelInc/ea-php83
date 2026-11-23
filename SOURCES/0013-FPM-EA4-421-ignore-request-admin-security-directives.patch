@@ -1,0 +1,47 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Dan Muey <daniel.muey@webpros.com>
+Date: Mon, 23 Nov 2026 09:28:59 -0600
+Subject: [PATCH] FPM: EA4-421 ignore request-supplied PHP_ADMIN_VALUE for
+ security directives
+
+---
+ sapi/fpm/fpm/fpm_main.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+
+diff --git a/sapi/fpm/fpm/fpm_main.c b/sapi/fpm/fpm/fpm_main.c
+index 6349452..3c30faf 100644
+--- a/sapi/fpm/fpm/fpm_main.c
++++ b/sapi/fpm/fpm/fpm_main.c
+@@ -1416,6 +1416,32 @@ static void fastcgi_ini_parser(zval *arg1, zval *arg2, zval *arg3, int callback_
+ 		return;
+ 	}
+ 
++	/* START CASE CPANEL-EA4-418
++	 * Refuse request-supplied PHP_ADMIN_VALUE (ZEND_INI_SYSTEM) for security-
++	 * sensitive directives. In the cPanel model all pool configuration is
++	 * delivered via the pool .conf (fpm_php_apply_defines), never via request
++	 * FastCGI params. Without this, a user proxying to another account's pool
++	 * via an .htaccess [P] RewriteRule plus [E=PHP_ADMIN_VALUE:doc_root=/] can
++	 * neutralize the pool's doc_root confinement (and disable_functions, etc.)
++	 * and execute as that account. The toggle file re-enables the upstream
++	 * behavior for the rare non-cPanel stack that relies on it (not recommended).
++	 */
++	if (*mode == ZEND_INI_SYSTEM) {
++		static const char *cpanel_blocked[] = {
++			"doc_root", "open_basedir", "disable_functions", "disable_classes",
++			"auto_prepend_file", "auto_append_file", "extension", "zend_extension", NULL
++		};
++		const char **b;
++		for (b = cpanel_blocked; *b; b++) {
++			if (!strcasecmp(key, *b) &&
++			    access("/var/cpanel/feature_toggles/allow_dangerous_fcgi_admin_values", F_OK) != 0) {
++				zlog(ZLOG_NOTICE, "CPANEL-EA4-418: refused request-supplied PHP_ADMIN_VALUE[%s] (touch /var/cpanel/feature_toggles/allow_dangerous_fcgi_admin_values to allow; not recommended)", key);
++				return;
++			}
++		}
++	}
++	/* END CASE CPANEL-EA4-418 */
++
+ 	if (arg2) {
+ 		value = Z_STRVAL_P(arg2);
+ 	}
