@@ -156,7 +156,7 @@ Patch107: 0009-Add-support-for-use-of-the-system-timezone-database.patch
 Patch402: 0010-0022-PLESK-missed-kill.patch
 Patch403: 0011-Revert-new-.user.ini-search-behavior.patch
 Patch404: 0012-Prevent-kill_all_lockers-from-crashing-PHP.patch
-Patch405: 0013-FPM-EA4-421-ignore-request-admin-security-directives.patch
+Patch405: 0013-FPM-EA4-421-ignore-request-supplied-PHP_ADMIN_VALUE.patch
 
 %if 0%{?rhel} == 7
 BuildRequires: devtoolset-8 devtoolset-8-gcc devtoolset-8-gcc-c++ kernel-devel
@@ -1678,7 +1678,7 @@ fi
 
 %changelog
 * Mon Nov 23 2026 Dan Muey <daniel.muey@webpros.com> - 8.3.37-3
-- EA4-421: Ignore request-supplied PHP_ADMIN_VALUE for security-sensitive directives
+- EA4-421: Ignore request-supplied PHP_ADMIN_VALUE (FPM)
 
 * Fri Nov 20 2026 Cory McIntire <cory.mcintire@webpros.com> - 8.3.37-2
 - EA-13654: Update php-litespeed to 8.4
