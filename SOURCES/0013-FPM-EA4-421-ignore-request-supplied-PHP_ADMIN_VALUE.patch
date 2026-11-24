@@ -1,0 +1,38 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Dan Muey <daniel.muey@webpros.com>
+Date: Mon, 23 Nov 2026 13:59:58 -0600
+Subject: [PATCH] FPM: EA4-421 ignore request-supplied PHP_ADMIN_VALUE
+
+---
+ sapi/fpm/fpm/fpm_main.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+diff --git a/sapi/fpm/fpm/fpm_main.c b/sapi/fpm/fpm/fpm_main.c
+index 6349452..da2805f 100644
+--- a/sapi/fpm/fpm/fpm_main.c
++++ b/sapi/fpm/fpm/fpm_main.c
+@@ -1416,6 +1416,24 @@ static void fastcgi_ini_parser(zval *arg1, zval *arg2, zval *arg3, int callback_
+ 		return;
+ 	}
+ 
++	/* START CASE EA4-421 (FPM leg of EA4-418)
++	 * Refuse every request-supplied PHP_ADMIN_VALUE (ZEND_INI_SYSTEM). In the
++	 * cPanel model all pool configuration is delivered via the pool .conf
++	 * (fpm_php_apply_defines), never via request FastCGI params, so nothing
++	 * legitimate uses this path. Honoring it lets anyone who reaches another
++	 * account's pool socket (e.g. an .htaccess [P] RewriteRule plus
++	 * [E=PHP_ADMIN_VALUE:doc_root=/]) override doc_root, open_basedir,
++	 * disable_functions, sendmail_path, etc. and run code as that account.
++	 * A denylist can not be complete, so all SYSTEM-scope values are refused.
++	 * The toggle file re-enables the upstream behavior (not recommended).
++	 */
++	if (*mode == ZEND_INI_SYSTEM &&
++	    access("/var/cpanel/feature_toggles/allow_dangerous_fcgi_admin_values", F_OK) != 0) {
++		zlog(ZLOG_NOTICE, "[EA4-421] refused request-supplied PHP_ADMIN_VALUE[%s] (touch /var/cpanel/feature_toggles/allow_dangerous_fcgi_admin_values to allow; not recommended)", key);
++		return;
++	}
++	/* END CASE EA4-421 */
++
+ 	if (arg2) {
+ 		value = Z_STRVAL_P(arg2);
+ 	}

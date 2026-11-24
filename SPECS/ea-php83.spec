@@ -111,7 +111,7 @@ Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
 Version:  8.3.37
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4588 for more details
-%define release_prefix 2
+%define release_prefix 3
 Release:  %{release_prefix}%{?dist}.cpanel
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -156,6 +156,7 @@ Patch107: 0009-Add-support-for-use-of-the-system-timezone-database.patch
 Patch402: 0010-0022-PLESK-missed-kill.patch
 Patch403: 0011-Revert-new-.user.ini-search-behavior.patch
 Patch404: 0012-Prevent-kill_all_lockers-from-crashing-PHP.patch
+Patch405: 0013-FPM-EA4-421-ignore-request-supplied-PHP_ADMIN_VALUE.patch
 
 %if 0%{?rhel} == 7
 BuildRequires: devtoolset-8 devtoolset-8-gcc devtoolset-8-gcc-c++ kernel-devel
@@ -935,6 +936,7 @@ inside them.
 %patch402 -p1 -b .missedkill
 %patch403 -p1 -b .userini
 %patch404 -p1 -b .kill_all_lockers
+%patch405 -p1 -b .fcgiadminvalue
 
 echo "DEBUG FILE LIST"
 find . -type f -print | sort
@@ -1675,6 +1677,9 @@ fi
 %files zip -f files.zip
 
 %changelog
+* Mon Nov 23 2026 Dan Muey <daniel.muey@webpros.com> - 8.3.37-3
+- EA4-421: Ignore request-supplied PHP_ADMIN_VALUE (FPM)
+
 * Fri Nov 20 2026 Cory McIntire <cory.mcintire@webpros.com> - 8.3.37-2
 - EA-13654: Update php-litespeed to 8.4
 
