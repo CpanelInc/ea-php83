@@ -15,7 +15,7 @@ index 6349452..da2805f 100644
  		return;
  	}
  
-+	/* START CASE CPANEL-EA4-418
++	/* START CASE EA4-421 (FPM leg of EA4-418)
 +	 * Refuse every request-supplied PHP_ADMIN_VALUE (ZEND_INI_SYSTEM). In the
 +	 * cPanel model all pool configuration is delivered via the pool .conf
 +	 * (fpm_php_apply_defines), never via request FastCGI params, so nothing
@@ -28,10 +28,10 @@ index 6349452..da2805f 100644
 +	 */
 +	if (*mode == ZEND_INI_SYSTEM &&
 +	    access("/var/cpanel/feature_toggles/allow_dangerous_fcgi_admin_values", F_OK) != 0) {
-+		zlog(ZLOG_NOTICE, "CPANEL-EA4-418: refused request-supplied PHP_ADMIN_VALUE[%s] (touch /var/cpanel/feature_toggles/allow_dangerous_fcgi_admin_values to allow; not recommended)", key);
++		zlog(ZLOG_NOTICE, "[EA4-421] refused request-supplied PHP_ADMIN_VALUE[%s] (touch /var/cpanel/feature_toggles/allow_dangerous_fcgi_admin_values to allow; not recommended)", key);
 +		return;
 +	}
-+	/* END CASE CPANEL-EA4-418 */
++	/* END CASE EA4-421 */
 +
  	if (arg2) {
  		value = Z_STRVAL_P(arg2);
